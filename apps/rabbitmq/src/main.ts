@@ -1,5 +1,5 @@
 import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
+import { AppModule } from "./modules/app.module";
 import { MicroserviceOptions, Transport } from "@nestjs/microservices";
 
 async function bootstrap() {
@@ -8,8 +8,9 @@ async function bootstrap() {
     {
       transport: Transport.RMQ,
       options: {
-        urls: ["amqp://localhost:5672"],
+        urls: ["amqp://user:password@localhost:5672"],
         queue: "cats_queue",
+        noAck: false,
         queueOptions: {
           durable: false,
         },
