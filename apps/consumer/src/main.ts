@@ -18,5 +18,6 @@ async function bootstrap() {
     },
   );
   await app.listen();
+  console.log("RabbitMQ Microservice is listening");
 }
 bootstrap();
