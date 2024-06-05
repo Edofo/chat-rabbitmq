@@ -1,27 +1,33 @@
 "use client";
 
+import { type Socket, io } from "socket.io-client";
 import styles from "./page.module.css";
-import { Client } from "@stomp/stompjs";
-import { useEffect } from "react";
-import { WebSocket } from "ws";
+import { useEffect, useState } from "react";
 
 export default function Page(): JSX.Element {
-  // Object.assign(global, { WebSocket });
+  const [socket, setSocket] = useState<Socket | null>(null);
+
   useEffect(() => {
-    const client = new Client({
-      brokerURL: "ws://localhost:15674/ws",
-      connectHeaders: {
-        login: "user",
-        passcode: "password",
-      },
+    const socketio = io("ws://localhost:4242");
+    setSocket(socketio);
+
+    socketio.on("connect", () => {
+      console.log("Connected to the server");
     });
 
-    client.activate();
-
-    client.onConnect = () => {
-      console.log("Connected");
-    };
+    socketio.on("message", (message) => {
+      console.log(`Received: ${message}`);
+    });
   }, []);
 
-  return <main className={styles.main}>aas</main>;
+  const sendMessage = () => {
+    socket?.emit("message", "Hello from the client");
+  };
+
+  return (
+    <div>
+      <h1>Socket.io</h1>
+      <button onClick={sendMessage}>Send message</button>
+    </div>
+  );
 }
