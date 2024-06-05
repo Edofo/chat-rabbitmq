@@ -1,9 +1,10 @@
 "use client";
 
 import { type Socket, io } from "socket.io-client";
-import styles from "./page.module.css";
 import { useEffect, useState } from "react";
-import { Component } from "@/components/component/component";
+import { Header } from "@/components/header";
+import { Sidebar } from "@/components/sidebar";
+import { Chat } from "@/components/chat";
 
 export default function Page(): JSX.Element {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -26,10 +27,12 @@ export default function Page(): JSX.Element {
   };
 
   return (
-    <div>
-      <h1>Socket.io</h1>
-      <Component />
-      <button onClick={sendMessage}>Send message</button>
+    <div className="flex h-screen w-full flex-col bg-gray-100 dark:bg-gray-900">
+      <Header />
+      <div className="flex flex-1 overflow-hidden">
+        <Sidebar />
+        <Chat />
+      </div>
     </div>
   );
 }
