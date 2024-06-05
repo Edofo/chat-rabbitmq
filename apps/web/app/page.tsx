@@ -24,10 +24,15 @@ export default function Page(): JSX.Element {
     socket?.emit("message", "Hello from the client");
   };
 
+  const joinRoom = () => {
+    socket?.emit("join-room", "room1", "user1");
+  };
+
   return (
     <div>
       <h1>Socket.io</h1>
       <button onClick={sendMessage}>Send message</button>
+      <button onClick={joinRoom}>Join room</button>
     </div>
   );
 }

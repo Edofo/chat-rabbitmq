@@ -3,11 +3,13 @@ import express from "express";
 import logger from "morgan";
 import cors from "cors";
 import path from "path";
-import socket from "./socket";
+import socketInit from "./socket/socket";
+import { initRabbitmq } from "./rabbitmq/rabbitmq";
 
 const app = express();
 
-socket();
+socketInit();
+initRabbitmq();
 
 app.use(cors());
 app.use(logger("dev"));
