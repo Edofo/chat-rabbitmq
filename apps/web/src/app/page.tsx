@@ -6,8 +6,14 @@ import { Header } from "@/components/header";
 import { Sidebar } from "@/components/sidebar";
 import { Chat } from "@/components/chat";
 
+type roomType = {
+  roomId: string;
+  name: string;
+};
+
 export default function Page(): JSX.Element {
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [rooms, setRooms] = useState<roomType[]>([]);
   const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
@@ -16,6 +22,10 @@ export default function Page(): JSX.Element {
 
     socketio.on("connect", () => {
       console.log("Connected to the server");
+    });
+
+    socketio.on("disconnect", () => {
+      console.log("Disconnected from the server");
     });
 
     socketio.on("message", (message) => {
@@ -29,6 +39,17 @@ export default function Page(): JSX.Element {
 
     socketio.on("user-disconnected", (userId) => {
       console.log(`User disconnected: ${userId}`);
+    });
+
+    socketio.on("created-room", (room) => {
+      console.log(`Room created: ${room}`);
+    });
+
+    socketio.emit("retrieve-all-room-messages");
+
+    socketio.on("all-rooms", (roomsData: string) => {
+      setRooms(JSON.parse(roomsData));
+      console.log(`All room messages: ${roomsData}`);
     });
   }, []);
 
@@ -58,6 +79,10 @@ export default function Page(): JSX.Element {
       <button onClick={createRoom}>Create Room</button>
       <button onClick={joinRoom}>Join Room</button>
       <button onClick={leaveRoom}>Leave Room</button>
+
+      {rooms.map((room) => (
+        <div key={room.roomId}>{room.name}</div>
+      ))}
 
       {messages.map((message, index) => (
         <div key={index}>{message}</div>

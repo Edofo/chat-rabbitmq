@@ -1,9 +1,13 @@
 import { rabbitmqConn } from "./rabbitmq";
 
-const createRoom = (roomId: string) => {
-  rabbitmqConn.createChannel((err, ch) => {
-    if (err) throw err;
-    ch.assertQueue(roomId, { durable: false });
+const createRoom = async (roomId: string, callback?: () => void) => {
+  await new Promise((resolve, reject) => {
+    rabbitmqConn.createChannel((err, ch) => {
+      if (err) throw err;
+      ch.assertQueue(roomId, { durable: false });
+      if (callback) callback();
+    });
+    resolve(true);
   });
   console.log(`Queue room rabbitmq: ${roomId} created`);
 };
@@ -37,12 +41,22 @@ const receiveMessageFromQueue = (
     if (err) throw err;
     ch.consume(roomId, (msg) => {
       if (msg) {
-        console.log(`Received message rabbitmq: ${msg.content.toString()}`);
         callback(msg);
       }
     });
   });
 };
+
+// const retrieveAllMessagesFromQueue = (roomId: string) => {
+//   rabbitmqConn.createChannel((err, ch) => {
+//     if (err) throw err;
+//     ch.consume(roomId, (msg) => {
+//       if (msg) {
+//         console.log(`Received message rabbitmq: ${msg.content.toString()}`);
+//       }
+//     });
+//   });
+// };
 
 export { createRoom, deleteRoom };
 export { sendMessageToQueue, receiveMessageFromQueue };
