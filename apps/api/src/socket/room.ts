@@ -35,6 +35,7 @@ const wsRoom = (wss: Server, socket: Socket) => {
     wss.to(roomId).emit("user-connected", userId);
     // send all messages from queue to user
     receiveMessageFromQueue(roomId, (msg) => {
+      console.log(`Retrieved message: ${msg.content.toString()}`);
       // console.log(`Retrieved message: ${msg.content.toString()}`);
       wss.to(socket.id).emit("message", msg.content.toString());
     });

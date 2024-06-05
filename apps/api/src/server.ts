@@ -4,7 +4,7 @@
 // import cors from "cors";
 // import path from "path";
 import socketInit from "./socket/socket";
-import { initRabbitmq } from "./rabbitmq/rabbitmq";
+import { initRabbitmq, rabbitmqConn } from "./rabbitmq/rabbitmq";
 
 // const app = express();
 
@@ -21,3 +21,9 @@ initRabbitmq();
 // console.log(
 //   `server started at http://localhost:${process.env.PORT_SERVER || 4000}`,
 // );
+
+// check before exit
+process.on("exit", (code) => {
+  rabbitmqConn.close();
+  console.log(`About to exit with code: ${code}`);
+});

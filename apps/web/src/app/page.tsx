@@ -15,6 +15,7 @@ export default function Page(): JSX.Element {
   const [socket, setSocket] = useState<Socket | null>(null);
   const [rooms, setRooms] = useState<roomType[]>([]);
   const [messages, setMessages] = useState<string[]>([]);
+  const [currentRoom, setCurrentRoom] = useState<roomType | null>(null);
 
   useEffect(() => {
     const socketio = io("ws://localhost:4242");
@@ -54,35 +55,48 @@ export default function Page(): JSX.Element {
   }, []);
 
   const sendMessage = () => {
-    socket?.emit("message", "room1", "Hello from the client");
+    if (!currentRoom) return;
+    socket?.emit("message", currentRoom.roomId, "Hello from the client");
     console.log("Sending message");
   };
 
-  const createRoom = () => {
-    socket?.emit("create-room", "room1");
+  const createRoom = (name: string) => {
+    socket?.emit("create-room", name);
     console.log("Creating room");
   };
 
-  const joinRoom = () => {
-    socket?.emit("join-room", "room1", "user1");
+  const joinRoom = (roomId: string) => {
+    const existingRoom = rooms.find((room) => room.roomId === roomId);
+    if (!existingRoom || currentRoom?.roomId === roomId) return;
+    if (currentRoom) leaveRoom();
+    socket?.emit("join-room", roomId, "user1");
+    setCurrentRoom(existingRoom);
     console.log("Joining room");
   };
 
   const leaveRoom = () => {
-    socket?.emit("leave-room", "room1", "user1");
+    if (!currentRoom) return;
+    socket?.emit("leave-room", currentRoom.roomId, "user1");
     console.log("Leaving room");
+    setMessages([]);
+    setCurrentRoom(null);
   };
 
   return (
     <div className="flex h-screen w-full flex-col bg-gray-100 dark:bg-gray-900">
       <button onClick={sendMessage}>Send Message</button>
-      <button onClick={createRoom}>Create Room</button>
-      <button onClick={joinRoom}>Join Room</button>
-      <button onClick={leaveRoom}>Leave Room</button>
+      <button onClick={() => createRoom("test")}>Create Room</button>
+      {/* <button onClick={joinRoom}>Join Room</button> */}
+      {/* <button onClick={leaveRoom}>Leave Room</button> */}
 
       {rooms.map((room) => (
-        <div key={room.roomId}>{room.name}</div>
+        <div key={room.roomId} className="flex gap-3">
+          <p>{room.name}</p>
+          <button onClick={() => joinRoom(room.roomId)}>rejoindre</button>
+        </div>
       ))}
+
+      <button onClick={() => leaveRoom()}>Quitter la room</button>
 
       {messages.map((message, index) => (
         <div key={index}>{message}</div>
