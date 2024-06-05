@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 body {
-  overflow: hidden;
-  max-height: 100vh;
+  /* overflow: hidden;
+  max-height: 100vh; */
 }
 
 @layer base {

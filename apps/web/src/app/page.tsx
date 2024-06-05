@@ -33,7 +33,7 @@ export default function Page(): JSX.Element {
   }, []);
 
   const sendMessage = () => {
-    socket?.emit("message", "Hello from the client");
+    socket?.emit("message", "room1", "Hello from the client");
     console.log("Sending message");
   };
 

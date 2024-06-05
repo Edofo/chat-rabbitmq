@@ -22,11 +22,16 @@ const wsRoom = (wss: Server, socket: Socket) => {
     await socket.join(roomId);
     console.log(`user ${userId} joined room ${roomId}`);
     wss.to(roomId).emit("user-connected", userId);
+  });
 
-    socket.on("message", (message) => {
-      console.log(`Sent message: ${message} from room ${roomId}`);
-      sendMessageToQueue(roomId, message);
-    });
+  socket.on("message", (roomId, message) => {
+    // check if user is in this room
+    if (!socket.rooms.has(roomId)) {
+      console.log(`User not in room ${roomId}`);
+      return;
+    }
+    console.log(`Sent message: ${message} from room ${roomId}`);
+    sendMessageToQueue(roomId, message);
   });
 
   socket.on("leave-room", async (roomId, userId) => {
