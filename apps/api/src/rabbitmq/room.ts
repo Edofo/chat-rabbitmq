@@ -37,7 +37,7 @@ const receiveMessageFromRoom = (
       roomId,
       (msg) => {
         if (msg) {
-          console.log(`Received rabbitmq: ${msg.content.toString()}`);
+          console.log(`Received message rabbitmq: ${msg.content.toString()}`);
           callback(msg);
         }
       },

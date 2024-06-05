@@ -1,6 +1,11 @@
 import { Server } from "socket.io";
 import { receiveMessage, sendMessage } from "../rabbitmq/rabbitmq";
 import wsRoom from "./room";
+import {
+  createRoom,
+  receiveMessageFromRoom,
+  sendMessageToRoom,
+} from "../rabbitmq/room";
 
 const wss = new Server({
   cors: {
@@ -16,17 +21,13 @@ const socketInit = () => {
       console.log(`client disconnected: ${socket.id}`);
     });
 
+    // ROOMs
     wsRoom(socket);
-
-    socket.on("message", (message) => {
-      console.log(`Received socketio: ${message}`);
-      sendMessage(message);
-    });
   });
 
-  receiveMessage((msg) => {
-    wss.emit("message", msg.content.toString());
-  });
+  // receiveMessage((msg) => {
+  //   wss.emit("message", msg.content.toString());
+  // });
 
   wss.listen(4242);
   console.log(`Web socket server started at ws://localhost:4242`);

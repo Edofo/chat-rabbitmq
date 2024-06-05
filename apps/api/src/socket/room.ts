@@ -8,24 +8,29 @@ import {
 } from "../rabbitmq/room";
 
 const wsRoom = (socket: Socket) => {
-  socket.on("create-room", (roomId) => {
+  socket.on("create-room", async (roomId) => {
     createRoom(roomId);
-    socket.join(roomId);
+    await socket.join(roomId);
     console.log(`room ${roomId} created`);
   });
 
-  socket.on("join-room", (roomId, userId) => {
-    socket.join(roomId);
+  socket.on("join-room", async (roomId, userId) => {
+    await socket.join(roomId);
     console.log(`user ${userId} joined room ${roomId}`);
-    // socket.to(roomId).emit("user-connected", userId);
+    socket.broadcast.to(roomId).emit("user-connected", userId);
 
-    receiveMessageFromRoom(roomId, (msg) => {
-      socket.to(roomId).emit("message", msg.content.toString());
+    socket.on("message", (message) => {
+      console.log(`Sent message: ${message} from room ${roomId}`);
+      sendMessageToRoom(roomId, message);
     });
+
+    // receiveMessageFromRoom(roomId, (msg) => {
+    //   socket.to(roomId).emit("message", msg.content.toString());
+    // });
   });
 
-  socket.on("leave-room", (roomId, userId) => {
-    socket.leave(roomId);
+  socket.on("leave-room", async (roomId, userId) => {
+    await socket.leave(roomId);
     console.log(`user ${userId} left room ${roomId}`);
     socket.to(roomId).emit("user-disconnected", userId);
   });
