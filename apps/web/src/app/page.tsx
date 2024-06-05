@@ -26,6 +26,10 @@ export default function Page(): JSX.Element {
     socket?.emit("message", "Hello from the client");
   };
 
+  const joinRoom = () => {
+    socket?.emit("join-room", "room1", "user1");
+  };
+
   return (
     <div className="flex h-screen w-full flex-col bg-gray-100 dark:bg-gray-900">
       <Header />

@@ -39,3 +39,19 @@ export const receiveMessage = (callback: (msg: Message) => void) => {
     });
   });
 };
+
+export let rabbitmqConn: amqp.Connection;
+
+export const initRabbitmq = async () => {
+  const conn = await new Promise<amqp.Connection>((resolve, reject) => {
+    amqp.connect(RABBITMQ_URL, (err, conn) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(conn);
+    });
+  });
+
+  rabbitmqConn = conn;
+  return conn;
+};

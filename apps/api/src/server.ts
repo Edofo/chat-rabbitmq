@@ -1,21 +1,23 @@
-import express from "express";
+// import express from "express";
 
-import logger from "morgan";
-import cors from "cors";
-import path from "path";
-import socket from "./socket";
+// import logger from "morgan";
+// import cors from "cors";
+// import path from "path";
+import socketInit from "./socket/socket";
+import { initRabbitmq } from "./rabbitmq/rabbitmq";
 
-const app = express();
+// const app = express();
 
-socket();
+socketInit();
+initRabbitmq();
 
-app.use(cors());
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, "public")));
+// app.use(cors());
+// app.use(logger("dev"));
+// app.use(express.json());
+// app.use(express.urlencoded({ extended: false }));
+// app.use(express.static(path.join(__dirname, "public")));
 
-app.listen(process.env.PORT_SERVER || 4000);
-console.log(
-  `server started at http://localhost:${process.env.PORT_SERVER || 4000}`,
-);
+// app.listen(process.env.PORT_SERVER || 4000);
+// console.log(
+//   `server started at http://localhost:${process.env.PORT_SERVER || 4000}`,
+// );

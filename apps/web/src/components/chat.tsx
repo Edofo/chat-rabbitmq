@@ -22,9 +22,9 @@ export function Chat() {
     <div className="flex flex-1 flex-col">
       <div className="h-[calc(100vh-128px)] overflow-y-auto px-6 py-4">
         <div className="space-y-4">
-          {users.map((user) => {
+          {users.map((user, index) => {
             return user.me ? (
-              <div className="flex items-start gap-4 justify-end">
+              <div key={index} className="flex items-start gap-4 justify-end">
                 <div className="flex flex-col gap-2">
                   <div className="rounded-lg bg-blue-500 p-3 text-sm text-white">
                     I'm doing great, thanks for asking!
@@ -39,7 +39,7 @@ export function Chat() {
                 </Avatar>
               </div>
             ) : (
-              <div className="flex items-start gap-4">
+              <div key={index} className="flex items-start gap-4">
                 <Avatar className="h-10 w-10 border-2 border-gray-200 dark:border-gray-700">
                   <AvatarImage alt="User Avatar" src="/placeholder-user.jpg" />
                   <AvatarFallback>{user.user}</AvatarFallback>
@@ -55,62 +55,6 @@ export function Chat() {
               </div>
             );
           })}
-          {/* <div className="flex items-start gap-4">
-            <Avatar className="h-10 w-10 border-2 border-gray-200 dark:border-gray-700">
-              <AvatarImage alt="User Avatar" src="/placeholder-user.jpg" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col gap-2">
-              <div className="rounded-lg bg-gray-100 p-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-gray-50">
-                Hey, how's it going?
-              </div>
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                2:30 PM
-              </span>
-            </div>
-          </div>
-          <div className="flex items-start gap-4 justify-end">
-            <div className="flex flex-col gap-2">
-              <div className="rounded-lg bg-blue-500 p-3 text-sm text-white">
-                I'm doing great, thanks for asking!
-              </div>
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                2:31 PM
-              </span>
-            </div>
-            <Avatar className="h-10 w-10 border-2 border-gray-200 dark:border-gray-700">
-              <AvatarImage alt="User Avatar" src="/placeholder-user.jpg" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-          </div>
-          <div className="flex items-start gap-4">
-            <Avatar className="h-10 w-10 border-2 border-gray-200 dark:border-gray-700">
-              <AvatarImage alt="User Avatar" src="/placeholder-user.jpg" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-            <div className="flex flex-col gap-2">
-              <div className="rounded-lg bg-gray-100 p-3 text-sm text-gray-900 dark:bg-gray-800 dark:text-gray-50">
-                That's great to hear! Did you see the new update?
-              </div>
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                2:32 PM
-              </span>
-            </div>
-          </div>
-          <div className="flex items-start gap-4 justify-end">
-            <div className="flex flex-col gap-2">
-              <div className="rounded-lg bg-blue-500 p-3 text-sm text-white">
-                Yes, I just checked it out. Looks really cool!
-              </div>
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                2:33 PM
-              </span>
-            </div>
-            <Avatar className="h-10 w-10 border-2 border-gray-200 dark:border-gray-700">
-              <AvatarImage alt="User Avatar" src="/placeholder-user.jpg" />
-              <AvatarFallback>JD</AvatarFallback>
-            </Avatar>
-          </div> */}
         </div>
       </div>
       <div className="border-t bg-white px-6 py-4 dark:border-gray-800 dark:bg-gray-800">
