@@ -1,13 +1,13 @@
 // Socket io feature to create a room and join a room use rabbitmq
 
-import type { Socket } from "socket.io";
+import type { Server, Socket } from "socket.io";
 import {
   createRoom,
   receiveMessageFromRoom,
   sendMessageToRoom,
 } from "../rabbitmq/room";
 
-const wsRoom = (socket: Socket) => {
+const wsRoom = (wss: Server, socket: Socket) => {
   socket.on("create-room", async (roomId) => {
     createRoom(roomId);
     await socket.join(roomId);
@@ -17,7 +17,7 @@ const wsRoom = (socket: Socket) => {
   socket.on("join-room", async (roomId, userId) => {
     await socket.join(roomId);
     console.log(`user ${userId} joined room ${roomId}`);
-    socket.broadcast.to(roomId).emit("user-connected", userId);
+    wss.to(roomId).emit("user-connected", userId);
 
     socket.on("message", (message) => {
       console.log(`Sent message: ${message} from room ${roomId}`);
@@ -32,7 +32,7 @@ const wsRoom = (socket: Socket) => {
   socket.on("leave-room", async (roomId, userId) => {
     await socket.leave(roomId);
     console.log(`user ${userId} left room ${roomId}`);
-    socket.to(roomId).emit("user-disconnected", userId);
+    wss.to(roomId).emit("user-disconnected", userId);
   });
 
   socket.on("message-room", (roomId, message) => {

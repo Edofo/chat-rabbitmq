@@ -22,7 +22,7 @@ const socketInit = () => {
     });
 
     // ROOMs
-    wsRoom(socket);
+    wsRoom(wss, socket);
   });
 
   // receiveMessage((msg) => {

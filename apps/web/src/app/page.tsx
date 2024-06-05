@@ -24,6 +24,10 @@ export default function Page(): JSX.Element {
     socketio.on("user-connected", (userId) => {
       console.log(`User connected: ${userId}`);
     });
+
+    socketio.on("user-disconnected", (userId) => {
+      console.log(`User disconnected: ${userId}`);
+    });
   }, []);
 
   const sendMessage = () => {
