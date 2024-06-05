@@ -5,18 +5,18 @@ import { Input } from "./ui/input";
 
 export function Chat() {
   const users = [
-    { user: "1", me: false },
-    { user: " 2", me: true },
-    { user: "3", me: false },
-    { user: "4", me: false },
-    { user: "3", me: false },
-    { user: "4", me: false },
-    { user: "3", me: false },
-    { user: "4", me: false },
-    { user: "3", me: false },
-    { user: "4", me: false },
-    { user: "3", me: false },
-    { user: "4", me: false },
+    { id: 1, user: "1", me: false },
+    { id: 2, user: " 2", me: true },
+    { id: 3, user: "3", me: false },
+    { id: 4, user: "4", me: false },
+    { id: 5, user: "3", me: false },
+    { id: 6, user: "4", me: false },
+    { id: 7, user: "3", me: false },
+    { id: 8, user: "4", me: false },
+    { id: 9, user: "3", me: false },
+    { id: 10, user: "4", me: false },
+    { id: 11, user: "3", me: false },
+    { id: 12, user: "4", me: false },
   ];
   return (
     <div className="flex flex-1 flex-col">

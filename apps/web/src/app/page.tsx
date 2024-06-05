@@ -34,7 +34,7 @@ export default function Page(): JSX.Element {
     <div className="flex h-screen w-full flex-col bg-gray-100 dark:bg-gray-900">
       <Header />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+        <Sidebar/>
         <Chat />
       </div>
     </div>
