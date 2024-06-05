@@ -8,10 +8,15 @@ const createRoom = (roomId: string) => {
   console.log(`Queue room rabbitmq: ${roomId} created`);
 };
 
-const deleteRoom = (roomId: string) => {
-  rabbitmqConn.createChannel((err, ch) => {
-    if (err) throw err;
-    ch.deleteQueue(roomId);
+const deleteRoom = async (roomId: string) => {
+  await new Promise((resolve, reject) => {
+    rabbitmqConn.createChannel((err, ch) => {
+      if (err) {
+        reject(err);
+      }
+      ch.deleteQueue(roomId);
+    }),
+      resolve(true);
   });
   console.log(`Queue room rabbitmq: ${roomId} deleted`);
 };
