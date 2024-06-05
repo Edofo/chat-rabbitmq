@@ -3,6 +3,7 @@
 import { type Socket, io } from "socket.io-client";
 import styles from "./page.module.css";
 import { useEffect, useState } from "react";
+import { Component } from "@/components/component/component";
 
 export default function Page(): JSX.Element {
   const [socket, setSocket] = useState<Socket | null>(null);
@@ -27,6 +28,7 @@ export default function Page(): JSX.Element {
   return (
     <div>
       <h1>Socket.io</h1>
+      <Component />
       <button onClick={sendMessage}>Send message</button>
     </div>
   );
