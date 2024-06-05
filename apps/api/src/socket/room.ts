@@ -3,14 +3,18 @@
 import type { Server, Socket } from "socket.io";
 import {
   createRoom,
-  receiveMessageFromRoom,
-  sendMessageToRoom,
+  deleteRoom,
+  receiveMessageFromQueue,
+  sendMessageToQueue,
 } from "../rabbitmq/room";
 
 const wsRoom = (wss: Server, socket: Socket) => {
   socket.on("create-room", async (roomId) => {
     createRoom(roomId);
     await socket.join(roomId);
+    receiveMessageFromQueue(roomId, (msg) => {
+      wss.to(roomId).emit("message", msg.content.toString());
+    });
     console.log(`room ${roomId} created`);
   });
 
@@ -21,12 +25,8 @@ const wsRoom = (wss: Server, socket: Socket) => {
 
     socket.on("message", (message) => {
       console.log(`Sent message: ${message} from room ${roomId}`);
-      sendMessageToRoom(roomId, message);
+      sendMessageToQueue(roomId, message);
     });
-
-    // receiveMessageFromRoom(roomId, (msg) => {
-    //   socket.to(roomId).emit("message", msg.content.toString());
-    // });
   });
 
   socket.on("leave-room", async (roomId, userId) => {
@@ -35,10 +35,10 @@ const wsRoom = (wss: Server, socket: Socket) => {
     wss.to(roomId).emit("user-disconnected", userId);
   });
 
-  socket.on("message-room", (roomId, message) => {
-    console.log(`Sent message: ${message} from room ${roomId}`);
-    sendMessageToRoom(roomId, message);
-    // socket.to(roomId).emit("message", message);
+  socket.on("delete-room", async (roomId) => {
+    await socket.leave(roomId);
+    deleteRoom(roomId);
+    console.log(`room ${roomId} deleted`);
   });
 };
 

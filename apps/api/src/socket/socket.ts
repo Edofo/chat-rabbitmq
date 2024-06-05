@@ -1,12 +1,5 @@
 import { Server } from "socket.io";
-import { receiveMessage, sendMessage } from "../rabbitmq/rabbitmq";
 import wsRoom from "./room";
-import {
-  createRoom,
-  receiveMessageFromRoom,
-  sendMessageToRoom,
-} from "../rabbitmq/room";
-
 const wss = new Server({
   cors: {
     origin: "*",

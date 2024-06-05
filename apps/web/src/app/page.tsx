@@ -8,6 +8,7 @@ import { Chat } from "@/components/chat";
 
 export default function Page(): JSX.Element {
   const [socket, setSocket] = useState<Socket | null>(null);
+  const [messages, setMessages] = useState<string[]>([]);
 
   useEffect(() => {
     const socketio = io("ws://localhost:4242");
@@ -19,6 +20,7 @@ export default function Page(): JSX.Element {
 
     socketio.on("message", (message) => {
       console.log(`Received: ${message}`);
+      setMessages((prevMessages) => [...prevMessages, message]);
     });
 
     socketio.on("user-connected", (userId) => {
@@ -56,6 +58,11 @@ export default function Page(): JSX.Element {
       <button onClick={createRoom}>Create Room</button>
       <button onClick={joinRoom}>Join Room</button>
       <button onClick={leaveRoom}>Leave Room</button>
+
+      {messages.map((message, index) => (
+        <div key={index}>{message}</div>
+      ))}
+
       {/* <Header />
       <div className="flex flex-1 overflow-hidden">
         <Sidebar />

@@ -1,6 +1,3 @@
-// Create a new room (queue) in RabbitMQ when a client emits a create-room event
-// Join a room (queue) in RabbitMQ when a client emits a join-room event
-
 import { rabbitmqConn } from "./rabbitmq";
 
 const createRoom = (roomId: string) => {
@@ -8,7 +5,7 @@ const createRoom = (roomId: string) => {
     if (err) throw err;
     ch.assertQueue(roomId, { durable: false });
   });
-  console.log(`Queue room rabbit ${roomId} created`);
+  console.log(`Queue room rabbitmq: ${roomId} created`);
 };
 
 const deleteRoom = (roomId: string) => {
@@ -16,35 +13,31 @@ const deleteRoom = (roomId: string) => {
     if (err) throw err;
     ch.deleteQueue(roomId);
   });
-  console.log(`Queue room rabbit ${roomId} deleted`);
+  console.log(`Queue room rabbitmq: ${roomId} deleted`);
 };
 
-const sendMessageToRoom = (roomId: string, message: string) => {
+const sendMessageToQueue = (roomId: string, message: string) => {
   rabbitmqConn.createChannel((err, ch) => {
     if (err) throw err;
     ch.sendToQueue(roomId, Buffer.from(message));
   });
-  console.log(`Sent Rabbitmq: ${message}`);
+  console.log(`Sent message rabbitmq: ${message}`);
 };
 
-const receiveMessageFromRoom = (
+const receiveMessageFromQueue = (
   roomId: string,
   callback: (msg: any) => void,
 ) => {
   rabbitmqConn.createChannel((err, ch) => {
     if (err) throw err;
-    ch.consume(
-      roomId,
-      (msg) => {
-        if (msg) {
-          console.log(`Received message rabbitmq: ${msg.content.toString()}`);
-          callback(msg);
-        }
-      },
-      { noAck: true },
-    );
+    ch.consume(roomId, (msg) => {
+      if (msg) {
+        console.log(`Received message rabbitmq: ${msg.content.toString()}`);
+        callback(msg);
+      }
+    });
   });
 };
 
 export { createRoom, deleteRoom };
-export { sendMessageToRoom, receiveMessageFromRoom };
+export { sendMessageToQueue, receiveMessageFromQueue };
