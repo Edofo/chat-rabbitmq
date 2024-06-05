@@ -29,7 +29,7 @@ const socketInit = () => {
   });
 
   wss.listen(4242);
-  console.log(`server started at ws://localhost:4242`);
+  console.log(`Web socket server started at ws://localhost:4242`);
 };
 
 export default socketInit;
