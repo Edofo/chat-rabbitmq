@@ -1,25 +1,25 @@
 "use client";
 
 import styles from "./page.module.css";
-import { Client } from "@stomp/stompjs";
 import { useEffect } from "react";
-import { WebSocket } from "ws";
+import { io } from "socket.io-client";
 
 export default function Page(): JSX.Element {
-  // Object.assign(global, { WebSocket });
   useEffect(() => {
-    const client = new Client({
-      brokerURL: "ws://localhost:15674/ws",
-      connectHeaders: {
-        login: "user",
-        passcode: "password",
-      },
+    const socket = io("ws://localhost:80");
+
+    socket.on("connect", () => {
+      console.log("Connected to server");
     });
 
-    client.activate();
+    socket.on("message", (message) => {
+      console.log("Received message: ", message);
+    });
 
-    client.onConnect = () => {
-      console.log("Connected");
+    socket.emit("message", "Hello from client");
+
+    return () => {
+      socket.disconnect();
     };
   }, []);
 

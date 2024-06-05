@@ -4,6 +4,9 @@ services:
   rabbitmq:
     container_name: rabbitmq
     image: rabbitmq:management
+    # build:
+    #   context: ./docker/rabbitmq
+    #   dockerfile: Dockerfile
     ports:
       - "5672:5672" # RabbitMQ broker
       - "15672:15672" # Management plugin (UI)
@@ -12,5 +15,4 @@ services:
       RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
       RABBITMQ_DEFAULT_USER: "user"
       RABBITMQ_DEFAULT_PASS: "password"
-      RABBITMQ_PLUGINS_EXPAND: "rabbitmq_web_stomp,rabbitmq_web_stomp_examples"
       RABBITMQ_STOMP_PORT: "15674"
